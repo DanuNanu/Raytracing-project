@@ -11,6 +11,8 @@ int main() {
  
 //outer loop looks at the current row, starting at the top 
     for (int i = 0; i < image_height; i++) {
+        // Image rendering progress indicator
+        std::clog <<"\rRendered : " << i << "% " << ' ' << std::flush;
         // inner loop looks at the column within that row
         for (int j = 0; j < image_width; j++) {
             // red value increases from 0-> 1 left to right
@@ -31,4 +33,5 @@ int main() {
             std::cout << ir << ' ' << ig << ' ' << ib << '\n';
         }
     }
+    std::clog << "\rFinished.      \n";
 }
