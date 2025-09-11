@@ -4,6 +4,7 @@
 
 #include "hittable.h"
 #include "vec3.h"
+#include "interval.h"
 
 class sphere : public hittable {
     private:
@@ -14,7 +15,7 @@ class sphere : public hittable {
     public: 
     sphere (const coord3& center, double radius) : center(center), radius(std::fmax(0, radius)) {}
 
-    bool hit (const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const override {
+    bool hit (const ray& r, interval ray_t, hit_record& rec) const override {
         vec3 oc = center - r.origin();
         auto a = r.direction().norm_sqrd();
         auto b = dot(r.direction(), oc);
@@ -25,9 +26,9 @@ class sphere : public hittable {
         } 
 
         auto root = (b - std::sqrt(discm))/a;
-        if (root <= ray_tmin || ray_tmax <= root) {
+        if (!ray_t.sorrounds(root)) {
             root = (b + std::sqrt(discm))/a;
-            if (root <= ray_tmin || root >= ray_tmax) {
+            if (!ray_t.sorrounds(root)) {
                 return false;
             }
         }

@@ -4,7 +4,7 @@
 #include "hittable.h"
 #include "vec3.h"
 #include <limits>
-
+#include "interval.h"
 
  double do_calc_max (double min, double max, double origin, double direction) {
         return std::fmax((min-origin)/direction, (max-origin)/direction);
@@ -26,7 +26,7 @@ class cube : public hittable {
     cube (const coord3& center, double s_length) : center(center), s_length(std::fmax(0, s_length)) {}
 
 
-    bool hit (const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const override {
+    bool hit (const ray& r, interval ray_t, hit_record& rec) const override {
             vec3 dir = r.direction();
             coord3 origin = r.origin();
             double half = s_length/2.0;
@@ -68,8 +68,8 @@ class cube : public hittable {
                 double t_enter = std::fmax(t_inter, tzmin);
                 double t_inter2 = std::fmin(txmax, tymax);
                 double texit = std::fmin(t_inter2, tzmax);
-                double t0 = std::fmax(t_enter, ray_tmin);
-                double t1 = std::fmin(texit, ray_tmax);
+                double t0 = std::fmax(t_enter, ray_t.min);
+                double t1 = std::fmin(texit, ray_t.min);
                 if (t0 > t1) {
                     return false;
                 } else {

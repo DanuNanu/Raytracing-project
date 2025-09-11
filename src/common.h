@@ -19,5 +19,5 @@ inline double deg_to_rad(double deg) {
 #include "colour.h"
 #include "ray.h"
 #include "vec3.h"
-
+#include "interval.h"
 #endif
