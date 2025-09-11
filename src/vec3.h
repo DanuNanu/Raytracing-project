@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <stdexcept>
 
 class vec3 {
     public:
@@ -47,6 +48,7 @@ class vec3 {
             elm[0] /= c;
             elm[1] /= c;
             elm[2] /= c;
+            return *this;
 
         }
 
