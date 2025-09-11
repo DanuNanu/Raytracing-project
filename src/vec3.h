@@ -20,7 +20,7 @@ class vec3 {
             return elm[1];
         }
 
-        double y() const {
+        double z() const {
             return elm[2];
         }
 
