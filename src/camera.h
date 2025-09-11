@@ -8,6 +8,8 @@
 #include "hittable_list.h"
 #include "interval.h"
 
+const double infin = std::numeric_limits<double>::infinity();
+
 class camera {
     private:
     int image_height;
@@ -17,7 +19,7 @@ class camera {
     vec3 delta_v;
 
     void initialise() {
-        int image_height = int(image_width/aspect_ratio);
+         image_height = int(image_width/aspect_ratio);
          image_height = (image_height < 1) ? 1: image_height;
          camera_center = coord3(0,0,0);
          auto focal_length = 1.0;
@@ -37,7 +39,7 @@ class camera {
 
     colour ray_colour(const ray& r, const hittable& world) {
         hit_record rec;
-        if (world.hit(r,interval(0, infinity), rec)) {
+        if (world.hit(r,interval(0, infin), rec)) {
             return 0.5* (rec.normal + colour(1,1,1));
         }
 
@@ -48,31 +50,30 @@ class camera {
 
 
     public:
-    double aspect_ratio = 16.0/10.0;
-    int image_width = 800;
+        double aspect_ratio = 1.0;
+        int image_width = 100;
 
-    void render(const hittable& world) {
-        initialise();
+        void render(const hittable& world) {
+             initialise();
 
-    std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+            std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
-    for (int i = 0; i < image_height; i++) {
-        // Image rendering progress indicator
-        std::clog <<"\rRendered : " << i << "% " << ' ' << std::flush;
-        // inner loop looks at the column within that row
-        for (int j = 0; j < image_width; j++) {
-            auto pixel_center = zero_pixel + (j*delta_u) + (i * delta_v);
-            auto ray_dir = pixel_center - camera_center;
-            ray rprime(camera_center, ray_dir);
+            for (int i = 0; i < image_height; i++) {
+                // Image rendering progress indicator
+                std::clog <<"\rRendered : " << i << "% " << ' ' << std::flush;
+            // inner loop looks at the column within that row
+                for (int j = 0; j < image_width; j++) {
+                     auto pixel_center = zero_pixel + (j*delta_u) + (i * delta_v);
+                     auto ray_dir = pixel_center - camera_center;
+                     ray rprime(camera_center, ray_dir);
 
-            colour pxl_clr = ray_colour(rprime, world);
-            write_colour(std::cout, pxl_clr);
-        }
+                     colour pxl_clr = ray_colour(rprime, world);
+                        write_colour(std::cout, pxl_clr);
+         }
+     }
+        std::clog << "\rFinished.      \n";
     }
-      std::clog << "\rFinished.      \n";
-}
 
-
-    };
+};
 
 #endif

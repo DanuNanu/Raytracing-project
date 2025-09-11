@@ -3,13 +3,13 @@
 
 #include <limits>
 
-const double infinity = std::numeric_limits<double>::infinity();
+const double infini = std::numeric_limits<double>::infinity();
 
 class interval {
     public:
     double min, max;
 
-    interval() : min(+infinity), max(-infinity) {}
+    interval() : min(+infini), max(-infini) {}
 
     interval(double min, double max) : min(min), max(max) {}
 
@@ -30,7 +30,7 @@ class interval {
 };
 
 
-const interval interval::empty    = interval(+infinity, -infinity);
-const interval interval::universe = interval(-infinity, +infinity);
+const interval interval::empty    = interval(+infini, -infini);
+const interval interval::universe = interval(-infini, +infini);
 
 #endif

@@ -69,7 +69,7 @@ class cube : public hittable {
                 double t_inter2 = std::fmin(txmax, tymax);
                 double texit = std::fmin(t_inter2, tzmax);
                 double t0 = std::fmax(t_enter, ray_t.min);
-                double t1 = std::fmin(texit, ray_t.min);
+                double t1 = std::fmin(texit, ray_t.max);
                 if (t0 > t1) {
                     return false;
                 } else {
