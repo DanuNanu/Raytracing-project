@@ -48,8 +48,8 @@ class camera {
             return colour(0,0,0);
         hit_record rec;
         if (world.hit(r,interval(0.001, infin), rec)) {
-            vec3 direction = correct_hem(rec.normal);
-            return 0.5* ray_colour(ray(rec.p, direction), max_depth-1, world);
+            vec3 direction = rec.normal + random_unit_vector();
+            return 0.50* ray_colour(ray(rec.p, direction), max_depth-1, world);
         }
 
         vec3 unit_direction = unit_vec(r.direction());
