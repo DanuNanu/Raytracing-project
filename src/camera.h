@@ -43,15 +43,18 @@ class camera {
 
     }
 
-    colour ray_colour(const ray& r, const hittable& world) {
+    colour ray_colour(const ray& r, int max_depth, const hittable& world) {
+        if (max_depth <= 0)
+            return colour(0,0,0);
         hit_record rec;
-        if (world.hit(r,interval(0, infin), rec)) {
-            return 0.5* (rec.normal + colour(1,1,1));
+        if (world.hit(r,interval(0.001, infin), rec)) {
+            vec3 direction = correct_hem(rec.normal);
+            return 0.5* ray_colour(ray(rec.p, direction), max_depth-1, world);
         }
 
         vec3 unit_direction = unit_vec(r.direction());
         auto a = 0.5*(unit_direction.y() + 1.0);
-        return (1.0-a)*colour(1.0,1.0,1.0) + a*colour(0.5,0.7,0.5);
+        return (1.0-a)*colour(1.0,1.0,1.0) + a*colour(0.5,0.7,1);
     }
 
      vec3 sample_square() const {
@@ -72,6 +75,7 @@ class camera {
         double aspect_ratio = 1.0;
         int image_width = 100;
         int samples_per_pixel = 10;
+        int max_depth = 10;
 
         void render(const hittable& world) {
              initialise();
@@ -80,7 +84,7 @@ class camera {
 
             for (int i = 0; i < image_height; i++) {
                 // Image rendering progress indicator
-                std::clog <<"\rRendered : " << i << "% " << ' ' << std::flush;
+                std::clog <<"\rRendered : " << double(i)/double(image_height)*100.0 << "% " << ' ' << std::flush;
             // inner loop looks at the column within that row
                 for (int j = 0; j < image_width; j++) {
                      auto pixel_center = zero_pixel + (j*delta_u) + (i * delta_v);
@@ -88,7 +92,7 @@ class camera {
                      colour pxl_colour(0,0,0);
                      for (int k = 0; k < samples_per_pixel; k++) {
                         ray r = get_ray(i,j);
-                        pxl_colour += ray_colour(r, world);
+                        pxl_colour += ray_colour(r, max_depth, world);
                      }
                      write_colour(std::cout, pixel_sample_scales*pxl_colour);
          }

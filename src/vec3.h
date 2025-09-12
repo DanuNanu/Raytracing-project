@@ -60,6 +60,15 @@ class vec3 {
             return sqrt(norm_sqrd());
         }
 
+        static vec3 random() {
+            return vec3(random_double(),random_double(), random_double());
+        }
+
+        static vec3 random(double min, double max) {
+            return vec3(random_double(min, max), random_double(min, max), random_double(min, max));
+        }
+    
+
 };
 
 using coord3 = vec3;
@@ -108,6 +117,24 @@ inline vec3 cross(const vec3& u, const vec3& v) {
 
 inline vec3 unit_vec(const vec3& v) {
     return v/v.norm();
+}
+
+inline vec3 random_unit_vector() {
+    while(true) {
+        auto point = vec3::random(-1,1);
+        auto lens = point.norm_sqrd();
+        if (1e-160 <lens && lens <=1) {
+            return point/sqrt(lens);
+        }
+    }
+}
+
+inline vec3 correct_hem(const vec3& normal) {
+    vec3 p_on_unit = random_unit_vector();
+    if (dot (p_on_unit, normal) > 0) {
+        return p_on_unit;
+    } 
+    return -p_on_unit;
 }
 
 #endif
